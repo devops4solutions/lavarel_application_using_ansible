@@ -1,4 +1,4 @@
-### Ansible Role to setup php,composer and lavarel application
+### Ansible Role to setup php,composer and laravel application
 
 This code is tested on the AWS ubuntu machine.
 
