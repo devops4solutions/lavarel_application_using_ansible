@@ -1,0 +1,76 @@
+- name: Upgrade System
+  apt: upgrade=dist update_cache=yes
+
+- name: Add php repository
+  apt_repository:
+   repo: 'ppa:ondrej/php'
+
+- name: Install PHP
+  apt: name=php{{php_version}} state=latest
+
+- name: Install PHP MB
+  apt: name=php{{php_version}}-mbstring state=latest
+
+- name: Install PHP XML
+  apt: name=php-xml state=latest
+
+- name: Install unzip
+  apt: name=unzip state=latest
+
+
+- name: Download php-composer
+  get_url:
+    url: https://getcomposer.org/installer
+    dest: /tmp/installer
+
+- name: install composer
+  shell: cat /tmp/installer | php -- --install-dir=/usr/local/bin
+  args:
+    creates: /usr/local/bin/composer
+
+- name: rename composer.phar to composer
+  shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer
+  args:
+    creates: /usr/local/bin/composer
+
+- name: make composer executable
+  file: 
+    path: /usr/local/bin/composer
+    mode: a+x
+    state: file
+
+- name: install apache2 server
+  apt:
+     name: apache2
+     state: present
+
+- name: checkout latest code from github
+  git: >
+    repo=https://github.com/devops4solutions/lavaral_project.git
+    dest=/opt/{{ vhost_name }}
+    force=yes
+    accept_hostkey=yes
+
+- name: copy lavarel project
+  shell: sudo mv /opt/{{ vhost_name }} /var/www/html/
+
+- name: Change permission
+  shell: sudo chgrp -R www-data /var/www/html/{{ vhost_name }}/
+
+- name: Change permission
+  shell: sudo chmod -R 775 /var/www/html/{{ vhost_name }}/storage
+
+- name: Remove default apache vhost config from sites-enabled
+  file: name=/etc/apache2/sites-enabled/000-default.conf state=absent
+
+- name: Create apache vhosts for  domain
+  template: src=web.conf.j2 dest="/etc/apache2/sites-available/{{ vhost_name }}.conf" owner=www-data group=www-data mode=0644
+
+- name: Update a2ensite
+  command: a2ensite {{ vhost_name }}
+
+- name: Enable the Apache rewrite module
+  command:  a2enmod rewrite
+
+  notify:
+    - restart apache2

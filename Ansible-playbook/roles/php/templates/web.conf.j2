@@ -1,0 +1,10 @@
+<VirtualHost *:80>
+   ServerName www.php.darvein.xyz
+   ServerAlias php.darvein.xyz
+   DocumentRoot /var/www/html/{{vhost_name}}/public
+   <Directory /var/www/html/{{vhost_name}}>
+       AllowOverride All
+   </Directory>
+   ErrorLog ${APACHE_LOG_DIR}/error.log
+   CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
