@@ -9,7 +9,7 @@ This code is tested on the AWS ubuntu machine.
 
 # Prerequistie
   - Update inventory file `inventories/dev/hosts`
-  - Generate the public key for the user ubuntu `ssh-key-gen` on Ansible Server
+  - Generate the public key for the user ubuntu `ssh-keygen` on Ansible Server
   - Copy the `id_rsa.pub` from `cd ~./ssh` and paste it on the PHP Server `vi ~/.ssh/authorized_keys` or you can use the priavte key and run this playbook which will automatically copy the public key on the target hosts
 
 # Using Private Key Directly
