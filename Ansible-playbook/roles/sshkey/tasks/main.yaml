@@ -1,4 +1,4 @@
 - name: Deploy SSH Key
-  authorized_key: user={{username}}
+  authorized_key: user=highclass
                   key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
                   state=present
