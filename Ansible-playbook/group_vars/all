@@ -1,5 +1,5 @@
 php_version: 8.0
-username: ubuntu
+username: admin
 vhost_name: lavarel_project
 server_document_root: "/var/www/html"
 
